@@ -1,4 +1,4 @@
-# Chapter 1 Installation of Drone Body
+# Installation of Drone Body
 
 ## 1.1 Motor ESC
 

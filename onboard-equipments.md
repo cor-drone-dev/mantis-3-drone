@@ -1,8 +1,8 @@
-# Chapter 2: Onboard Equipments
+# Onboard Equipments
 
 In this tutorial, the onboard computer used is the NVIDIA JETSON XAVIER NX combined with the HZHY 330 carrier board from Au-Zone. When using the Seeedstudio carrier board, the installation holes may be slightly different. The onboard computer runs Ubuntu 18.04 system. The camera used is the Realsense D455 without a housing module, that is, the Realsense D450.
 
-## 2.1 Camera Installation:
+## 1.1 Camera Installation
 
 The camera comes with the accessories shown in the figure below, from left to right, they are the computing board, connection cable, black sticker, camera module. We also need to install the 3D-printed Realsense mounting base. The installation process is very simple. First, stick the black sticker on the side of the camera module with the lens. Then, install the camera module on the mounting base with the protruding screw holes on the ribbed side. Next, install the computing board on the back of the mounting base according to the screw holes, noting that there are two sets of holes on the back of the mounting base for installing the computing board. When using a straight-line cable (such as the one shown in the figure), the computing board is installed in the middle position. When using a Z-shaped cable, the computing board is installed in the edge position. The installation uses self-tapping screws of M2x8 or M2x6.
 
@@ -11,9 +11,11 @@ The camera comes with the accessories shown in the figure below, from left to ri
 
 After installation, connect the ribbon cable. The final result with a Z-shaped ribbon cable is shown below. When using a straight ribbon cable, the result will be similar, with the computing board located closer to the center.
 
-<img src="./assets/cor_drone/image33.png" alt="33" style="width:38.0%" /> <img src="./assets/cor_drone/image34.jpeg" alt="34" style="width:30.0%" /> <img src="./assets/cor_drone/image35.jpeg" alt="35" style="width:30.0%" />
+<img src="./assets/cor_drone/image33.png" alt="33" style="width:38.0%" /> 
+<img src="./assets/cor_drone/image34.jpeg" alt="34" style="width:30.0%" /> 
+<img src="./assets/cor_drone/image35.jpeg" alt="35" style="width30.0%" />
 
-## 2.2 Installation of Onboard Computer:
+## 1.2 Installation of Onboard Computer
 
 First, insert the TF card into the onboard computer to use as a hard drive. Then, insert the onboard computer into the mounting bracket from the back upper side, and use M2.6x8 self-tapping screws to fix the onboard computer. Note that there are two screws in the front and two in the back that need to be installed. The installation is shown in the figure below.
 
@@ -23,11 +25,11 @@ Then, fix the installed camera module in front of the onboard computer installat
 
 <img src="./assets/cor_drone/image38.jpeg" alt="38" style="width:70.0%" />
 
-## 2.3 Connection between Onboard Computer and Camera:
+## 1.3 Connection between Onboard Computer and Camera
 
 The onboard computer and Realsense camera are connected via a USB 3.0/3.1/3.2 cable. The Realsense end is a Type-C interface, and the HZHY H330 carrier board of the onboard computer has only one USB Type-C interface. Therefore, a USB hub is required to split the Type-C interface into multiple Type-A interfaces and connect the camera to one of them. Note that the USB hub can be attached to the small horizontal board behind the onboard computer.
 
-## 2.4 Onboard Computer Configuration:
+## 1.4 Onboard Computer Configuration
 
 Connect the keyboard, mouse, and monitor to the onboard computer, and power it using the onboard computer's built-in voltage regulator. Then, turn on the computer.
 For the HZHY 330 carrier board, you need to first migrate the system to the TF card. Refer to the HZHY NVIDIA series carrier board document "Installing the System to the Expansion Disk.pdf" for migration instructions.
@@ -37,7 +39,7 @@ Install ROS and Realsense related drivers separately. Please refer to the offici
 <img src="./assets/cor_drone/image39.jpeg" alt="39" style="width:70.0%" />
 After installation is complete, open the Ubuntu system command line, and then enter `realsense-viewer` to open the sample software. Check that the connection in the upper left corner is USB 3.0 or above. You can open the depth map, RGB image, etc. to view it. Using the ROS Wrapper, you can also retrieve the left and right infrared binocular images. If the connection is 2.0/2.1, it may be due to the USB Hub or the USB cable used is not 3.0. For the HZHY 330 carrier board, it may be due to an error in the USB 3.2 interface configuration. You need to open the `/etc/rc.local` file, add the two lines of commands circled in the figure below before `exit`, and then restart the onboard computer.
 
-## 2.5 Installation of Onboard Computer and Mounting to Aircraft:
+## 1.5 Installation of Onboard Computer and Mounting to Aircraft
 
 During flight, the onboard computer needs to be powered by a separate power line from the battery or ESC soldering pad.
 The mounting bracket for the onboard computer has four installation holes. Align the bracket with the corresponding holes on
@@ -48,14 +50,12 @@ The drone after the installation is completed is as follows.
 
 <img src="./assets/cor_drone/image41.jpeg" alt="41" style="width:70.0%" />
 
-# Chapter 3 Onboard Computer and Flight Controller Communication
-
-## 3.1 Circuit Connection:
+## 1.6 Connection Between Flight Controller and Onboard Computer
 
 The onboard computer communicates with the flight controller by connecting a USB to TTL module to the USB port.
 Note that the maximum baud rate supported by the onboard computer's built-in serial port is not high enough (generally up to 115200), so the USB to TTL module is necessary. It is recommended to use a CP2102 serial port module, or other serial port modules such as PL2303 or CH340 can also be used. For the onboard computer used in this manual, it has only one USB Type-C interface, so a USB hub is needed to connect both the USB to TTL and the Realsense camera.
 
-## 3.2 Software Configuration:
+## 1.7 Software Configuration
 
 On the flight controller side, we completed the communication settings with the onboard computer (i.e. MAV_2, Onboard) in step 1.11. On the onboard computer side, we need to fix the device port number of the USB to TTL and start MAVROS to achieve communication, as follows:
 
