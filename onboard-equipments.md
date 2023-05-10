@@ -13,13 +13,14 @@ After installation, connect the ribbon cable. The final result with a Z-shaped r
 
 <img src="./assets/cor_drone/image33.png" alt="33" style="width:38.0%" /> 
 <img src="./assets/cor_drone/image34.jpeg" alt="34" style="width:30.0%" /> 
-<img src="./assets/cor_drone/image35.jpeg" alt="35" style="width30.0%" />
+<img src="./assets/cor_drone/image35.jpeg" alt="35" style="width:30.0%" />
 
 ## 1.2 Installation of Onboard Computer
 
 First, insert the TF card into the onboard computer to use as a hard drive. Then, insert the onboard computer into the mounting bracket from the back upper side, and use M2.6x8 self-tapping screws to fix the onboard computer. Note that there are two screws in the front and two in the back that need to be installed. The installation is shown in the figure below.
 
-<img src="./assets/cor_drone/image36.png" alt="36" style="width:50.0%" /> <img src="./assets/cor_drone/image37.jpeg" alt="37" style="width:50.0%" />
+<img src="./assets/cor_drone/image36.png" alt="36" style="width:45.0%" />
+<img src="./assets/cor_drone/image37.jpeg" alt="37" style="width:43.0%" />
 
 Then, fix the installed camera module in front of the onboard computer installation seat using M2.6x8 self-tapping screws, with the camera cable facing downwards. When installing, be careful not to pinch the cable. **A thin rubber sleeve or rubber pad can be placed on the screw between the camera module and the onboard computer installation seat for shock absorption.** The installation is shown in the following figure.
 
@@ -37,6 +38,7 @@ Install ROS and Realsense related drivers separately. Please refer to the offici
 (<https://dev.intelrealsense.com/docs/nvidia-jetson-tx2-installation>)
 
 <img src="./assets/cor_drone/image39.jpeg" alt="39" style="width:70.0%" />
+
 After installation is complete, open the Ubuntu system command line, and then enter `realsense-viewer` to open the sample software. Check that the connection in the upper left corner is USB 3.0 or above. You can open the depth map, RGB image, etc. to view it. Using the ROS Wrapper, you can also retrieve the left and right infrared binocular images. If the connection is 2.0/2.1, it may be due to the USB Hub or the USB cable used is not 3.0. For the HZHY 330 carrier board, it may be due to an error in the USB 3.2 interface configuration. You need to open the `/etc/rc.local` file, add the two lines of commands circled in the figure below before `exit`, and then restart the onboard computer.
 
 ## 1.5 Installation of Onboard Computer and Mounting to Aircraft
@@ -46,6 +48,7 @@ The mounting bracket for the onboard computer has four installation holes. Align
 the top of the aircraft, then use M2.6x8 self-tapping screws to mount it to the aircraft.
 
 <img src="./assets/cor_drone/image40.png" alt="40" style="width:70.0%" />
+
 The drone after the installation is completed is as follows.
 
 <img src="./assets/cor_drone/image41.jpeg" alt="41" style="width:70.0%" />
@@ -74,3 +77,29 @@ On the flight controller side, we completed the communication settings with the 
        sudo apt-get remove modemmanager -y
        ```
        `After` logging out the system and logging in again, the permission manager of the onboard computer will be uninstalled to avoid the serial port The problem of no permission to open the serial port will be avoided.
+
+---
+
+# Problem Lists
+
+1. _SKU Invalid_ when plugin the realsense camera
+
+   According to Intel forum, directly update the firmware for D4 V3 board without D450 camera module. Solved.
+
+2. When launch the realsense node, continuously receiving error: `control_transfer returned error, index: 768`
+
+   Solution: `sudo apt purge ros-noetic-librealsense2`
+
+3. `lsusb` or `rs-capture` takes too long time to response
+
+   The only reason is the HSF100 cable is not well connected, chech the hardware connection and pins.
+
+## Intel WiFi modules
+
+I don't know if this works. If direct plugin works then you can skip these steps.
+
+https://www.intel.com/content/www/us/en/support/articles/000005511/wireless.html
+
+1. Install the corresponding firmware
+2. Use `tar xzf` to unzip
+3. Copy the `.ucode` file under `/lib/firmware/`
