@@ -4,12 +4,22 @@ Mantis-3 installation instructions
 
 Based on the Chinese guidebook by Clarence Chen
 
-# Installation
+[User Manual](./user_manual.md)
 
-1. [Drone Body](./drone-body.md)
+## Installation
 
-2. [TODO][Flight Controllers](./flight-controller.md)
+1. [Drone Body](./drone_body.md)
 
-3. [TODO][Onboard Equipments](./onboard-equipments.md)
+2. [TODO][Flight Controllers](./flight_controller.md)
 
-4. [TODO][Flight Tests](./flight-tests.md)
+3. [TODO][Onboard Equipments](./onboard_equipments.md)
+
+4. [TODO][Flight Tests](./flight_tests.md)
+
+## ROS
+
+[TODO] [MAVROS](./mavros.md)
+
+### Multi-Robot Configurations
+
+[TODO][Multi-Drone via MAVROS](./mavros_multi_drones.md)
