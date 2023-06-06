@@ -1,12 +1,15 @@
 # Onboard Equipments
 
-In this tutorial, the onboard computer used is the NVIDIA JETSON XAVIER NX combined with the HZHY 330 carrier board from Au-Zone. When using the Seeedstudio carrier board, the installation holes may be slightly different. The onboard computer runs Ubuntu 18.04 system. The camera used is the Realsense D455 without a housing module, that is, the Realsense D450.
+In this tutorial, the onboard computer used is the NVIDIA Jetson Xavier NX combined with the Seeedstudio A203v2 carrier board. The onboard computer runs JetPack 5.0.2, which is a Ubuntu 20.04 system. The camera we use is a Realsense D455 without a housing module, that is, a customed module of Realsense D450 depth camera and Realsense D4 V3 vision processor board.
 
 ## 1.1 Camera Installation
 
-The camera comes with the accessories shown in the figure below, from left to right, they are the computing board, connection cable, black sticker, camera module. We also need to install the 3D-printed Realsense mounting base. The installation process is very simple. First, stick the black sticker on the side of the camera module with the lens. Then, install the camera module on the mounting base with the protruding screw holes on the ribbed side. Next, install the computing board on the back of the mounting base according to the screw holes, noting that there are two sets of holes on the back of the mounting base for installing the computing board. When using a straight-line cable (such as the one shown in the figure), the computing board is installed in the middle position. When using a Z-shaped cable, the computing board is installed in the edge position. The installation uses self-tapping screws of M2x8 or M2x6.
+The camera comes with the accessories shown in the figure below, from left to right, they are the computing board, connection cable, camera sticker, camera module. We also need to install the 3D-printed Realsense mounting base.
 
 <img src="./assets/cor_drone/image31.png" alt="31" style="width:80.0%" />
+
+The installation process is very simple. First, stick the camera sticker on the side of the camera module with the lens. Then, install the camera module on the mounting base with the protruding screw holes on the ribbed side. Next, install the computing board on the back of the mounting base according to the screw holes, noting that there are two sets of holes on the back of the mounting base for installing the computing board. When using a straight-line cable (such as the one shown in the figure), the computing board is installed in the middle position. When using a Z-shaped cable, the computing board is installed in the edge position. The installation uses self-tapping screws of M2x8mm or M2x6mm.
+
 <img src="./assets/cor_drone/image32.png" alt="32" style="width:80.0%" />
 
 After installation, connect the ribbon cable. The final result with a Z-shaped ribbon cable is shown below. When using a straight ribbon cable, the result will be similar, with the computing board located closer to the center.
@@ -17,7 +20,37 @@ After installation, connect the ribbon cable. The final result with a Z-shaped r
 
 ## 1.2 Installation of Onboard Computer
 
-First, insert the TF card into the onboard computer to use as a hard drive. Then, insert the onboard computer into the mounting bracket from the back upper side, and use M2.6x8 self-tapping screws to fix the onboard computer. Note that there are two screws in the front and two in the back that need to be installed. The installation is shown in the figure below.
+### 1.2.1 Installing a cooling module on NX Boards
+
+First, we should take Jetson Xavier NX board carefully.
+Before mounting it on the carrier board, we should install a cooling fan onto the board.
+Use the screws and thermal metal plate come with the cooling module to fix it with the NX board.
+Remember to connect the power cable of the cooling module with the carrier board at the end of onboard computer installtion.
+
+### 1.2.2 Installing Boards
+
+Then, we should install all the circuits on to the carrier board.
+Take out the Intel A210 WiFi modules and connect it with the antenna.
+Next, insert it into the M.2 slot located on the underside of the carrier board, and secure it with a M2x4mm screw (You can use the one with the carrier board.)
+Please note that the underside of the carrier board features a 40-pin slot specifically designed for the Jetson NX.
+The next step is to carefully insert the Jetson NX module into this slot at an angle of 30 to 40 degrees.
+It will be fixed automatically.
+Use the same M2x4mm screws to secure the NX module.
+Finially, insert the TF card into the onboard computer to use as a hard drive.
+
+### 1.2.2 Flashing JetPack OS to the Boards
+
+You may follow the manual [here](https://wiki.seeedstudio.com/reComputer_A203_Flash_System/) to flash the system via NVIDIA SDK Manager with GUI.
+If you're using a Linux desktop, I would recommend to [flash JetPack via command line](https://wiki.seeedstudio.com/reComputer_A203_Flash_System/#flashing-jetpack-os-via-command-line).
+Remember if your Jetson Xavier NX is a 16GB version, you should be careful at the step 6 or step 4: _Unzip the Driver in the system folder_.
+At this step you replace the `.dtb` files which describes ports on the carrier board.
+Since the product number of Jetson Xavier NX 16GB version is `p3668-0003`, you need to make sure `.dtb` files with the same name is replaced.
+Otherwise, the TF card may not be detected in JetPack OS.
+I would recommend to rename `tegra194-p3668-0001-p3509-0000.dtb` file to `tegra194-p3668-0003-p3509-0000.dtb`.
+
+### 1.2.3
+
+Then, insert the onboard computer into the mounting bracket from the back upper side, and use M2.6x8 self-tapping screws to fix the onboard computer. Note that there are two screws in the front and two in the back that need to be installed. The installation is shown in the figure below.
 
 <img src="./assets/cor_drone/image36.png" alt="36" style="width:45.0%" />
 <img src="./assets/cor_drone/image37.jpeg" alt="37" style="width:43.0%" />
@@ -39,7 +72,11 @@ Install ROS and Realsense related drivers separately. Please refer to the offici
 
 <img src="./assets/cor_drone/image39.jpeg" alt="39" style="width:70.0%" />
 
-After installation is complete, open the Ubuntu system command line, and then enter `realsense-viewer` to open the sample software. Check that the connection in the upper left corner is USB 3.0 or above. You can open the depth map, RGB image, etc. to view it. Using the ROS Wrapper, you can also retrieve the left and right infrared binocular images. If the connection is 2.0/2.1, it may be due to the USB Hub or the USB cable used is not 3.0. For the HZHY 330 carrier board, it may be due to an error in the USB 3.2 interface configuration. You need to open the `/etc/rc.local` file, add the two lines of commands circled in the figure below before `exit`, and then restart the onboard computer.
+After installation is complete, open the Ubuntu system command line, and then enter `realsense-viewer` to open the sample software. Check that the connection in the upper left corner is USB 3.0 or above. You can open the depth map, RGB image in the software to view it.
+Using the ROS Wrapper, you can also retrieve the left and right infrared binocular images.
+Please take note that the RealSense depth camera requires a USB 3.0 connection to function properly. Using a lower bandwidth connection may result in insufficient data transmission capabilities.
+If the connection is USB 2.0/2.1, it may be due to the USB Hub or the USB cable used is not 3.0.
+If you encounter this error on the HZHY 330 carrier board, it may be due to an error in the USB 3.2 interface configuration. You need to open the `/etc/rc.local` file, add the two lines of commands circled in the figure below before `exit`, and then restart the onboard computer.
 
 ## 1.5 Installation of Onboard Computer and Mounting to Aircraft
 
