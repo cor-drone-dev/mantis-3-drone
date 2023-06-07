@@ -1,5 +1,7 @@
 # ROS Multi-Machine Communication
 
+> Test on June 7th: The name you set in `/etc/hosts` doesnot have to be the hostname.
+
 1. Use `hostname` to query the hostname of your computer. E.g. you get `laptop` for your laptop and `drone1-desktop` for your drone.
 2. Type `ifconfig` to query the IP address. E.g. you get `192.168.1.100` for your laptop and `192.168.1.101` for your drone.
 3. Modify the `/etc/hosts` file on both machines (you will need sudo access), fill in the IP address and corresponding hostname. E.g.
@@ -88,3 +90,32 @@ check again. The offset should now get better.
 hope that helps!
 
 Reference: [ROS forum](https://answers.ros.org/question/298821/tf-timeout-with-multiple-machines/)
+
+## Bandwidth Test
+
+We can use iperf to test the communication bandwidth between two robots.
+`iperf` is a network test tool
+Iperf is a network performance testing tool.
+Iperf can test maximum TCP and UDP bandwidth performance, has various parameters and UDP characteristics, can be adjusted as needed, and can report bandwidth, delay jitter, and packet loss
+
+Before start testing, make sure the package `iperf` is installed on both machines.
+You may use `sudo apt-get install iperf` to install it.
+
+1. First we need to select one robot as the server and the other as the client.
+   `iperf` client will send message to the server with the maximum bandwidth.
+2. On the server machine, use following commands to start the process:
+   `-s` denotes the server machine, `-p` specifies the port of communication.
+   `-i` sets the time interval of test results printed on the screen.
+   `-t` gives the time duration of network test.
+
+   ```
+   iperf -s -p 14555 -i 1 -t 10
+   ```
+
+3. On the client machine, type following commands to start the test:
+   `-c` specifies the client, which read the IP address of the server.
+   `-d` will switch to dual test mode, which holds a bi-directional message transimission test.
+
+   ```
+   iperf -c 192.168.1.100 -p 14555 -i 1 -t 10 -d
+   ```
