@@ -137,6 +137,6 @@ I don't know if this works. If direct plugin works then you can skip these steps
 
 https://www.intel.com/content/www/us/en/support/articles/000005511/wireless.html
 
-1. Install the corresponding firmware
+1. Install the corresponding firmware (In our case we use AX210)
 2. Use `tar xzf` to unzip
 3. Copy the `.ucode` file under `/lib/firmware/`
