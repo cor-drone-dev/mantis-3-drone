@@ -7,7 +7,7 @@
 Disconnect the battery, insert the TF card into the flight controller, and then use a USB cable to flash the firmware.
 
 If you are using Holybro KakuteH7v2, you need to flash the PX4 firmware following this [link](https://docs.px4.io/main/en/advanced_config/bootloader_update_from_betaflight.html#dfu-util).
-First you need to install the firmware from the official [repo](), next compile it, then replace `build/<target>/<target>.bin` to the path of your compiled binary file.
+First you need to install the firmware from the official [repo](https://github.com/PX4/PX4-Autopilot), next compile it with `make holybro_kakuteh7v2_bootloader`, then replace `build/<target>/<target>.bin` to the path of your compiled binary file.
 
 ### 1.2 Autopilot Parameter Configuration
 

@@ -20,25 +20,45 @@ After installation, connect the ribbon cable. The final result with a Z-shaped r
 
 ## 1.2 Installation of Onboard Computer
 
-### 1.2.1 Installing a cooling module on NX Boards
+### 1.2.1 Installing a Cooling Module on NX Board
 
-First, we should take Jetson Xavier NX board carefully.
+First, we should take Jetson Xavier NX board from the package carefully.
 Before mounting it on the carrier board, we should install a cooling fan onto the board.
 Use the screws and thermal metal plate come with the cooling module to fix it with the NX board.
 Remember to connect the power cable of the cooling module with the carrier board at the end of onboard computer installtion.
 
-### 1.2.2 Installing Boards
+### 1.2.2 Installing Wi-Fi Module on the Carrier Board
+
+Before installing the NX board on the carrier board, we should install the Wi-Fi module on the carrier board.
+The Wi-Fi module we use is Intel AX210, which has a M.2 interface and supports 5GHz Wi-Fi.
+Remember to order the Wi-Fi module with the antenna.
+Next, insert it into the M.2 slot located on the underside of the carrier board, and secure it with a M2x4mm screw (You can use the one with the carrier board.)
+
+### 1.2.3 Installing NX Boards on the Carrier Board
 
 Then, we should install all the circuits on to the carrier board.
-Take out the Intel A210 WiFi modules and connect it with the antenna.
-Next, insert it into the M.2 slot located on the underside of the carrier board, and secure it with a M2x4mm screw (You can use the one with the carrier board.)
 Please note that the underside of the carrier board features a 40-pin slot specifically designed for the Jetson NX.
 The next step is to carefully insert the Jetson NX module into this slot at an angle of 30 to 40 degrees.
 It will be fixed automatically.
 Use the same M2x4mm screws to secure the NX module.
-Finially, insert the TF card into the onboard computer to use as a hard drive.
+Finally, insert the TF card into the onboard computer to use as a hard drive.
+If you choose to use NVME SSD, you may insert it into the M.2 SSD slot and fix it with screws.
 
-### 1.2.2 Flashing JetPack OS to the Boards
+Then, insert the onboard computer into the mounting bracket from the back upper side, and use M2.6x8 self-tapping screws to fix the onboard computer. Note that there are two screws in the front and two in the back that need to be installed. The installation is shown in the figure below.
+
+<img src="./assets/cor_drone/image36.png" alt="36" style="width:45.0%" />
+<img src="./assets/cor_drone/image37.jpeg" alt="37" style="width:43.0%" />
+
+Finally, fix the installed camera module in front of the onboard computer installation seat using M2.6x8 self-tapping screws, with the camera cable facing downwards. When installing, be careful not to pinch the cable. **A thin rubber sleeve or rubber pad can be placed on the screw between the camera module and the onboard computer installation seat for shock absorption.** The installation is shown in the following figure.
+
+<img src="./assets/cor_drone/image38.jpeg" alt="38" style="width:70.0%" />
+
+Connect the keyboard, mouse, and monitor to the onboard computer, and power it using the onboard computer's built-in voltage regulator. Then, turn on the computer.
+Please refer to the official ROS website and Realsense website for installation instructions.
+(<https://dev.intelrealsense.com/docs/nvidia-jetson-tx2-installation>)
+<img src="./assets/cor_drone/image39.jpeg" alt="39" style="width:70.0%" />
+
+### 1.2.4 Flashing JetPack OS to the Boards
 
 You may follow the manual [here](https://wiki.seeedstudio.com/reComputer_A203_Flash_System/) to flash the system via NVIDIA SDK Manager with GUI.
 If you're using a Linux desktop, I would recommend to [flash JetPack via command line](https://wiki.seeedstudio.com/reComputer_A203_Flash_System/#flashing-jetpack-os-via-command-line).
@@ -48,40 +68,144 @@ Since the product number of Jetson Xavier NX 16GB version is `p3668-0003`, you n
 Otherwise, the TF card may not be detected in JetPack OS.
 I would recommend to rename `tegra194-p3668-0001-p3509-0000.dtb` file to `tegra194-p3668-0003-p3509-0000.dtb`.
 
-### 1.2.3
+### 1.2.5 How to copy system to TF/SD card?
 
-Then, insert the onboard computer into the mounting bracket from the back upper side, and use M2.6x8 self-tapping screws to fix the onboard computer. Note that there are two screws in the front and two in the back that need to be installed. The installation is shown in the figure below.
+1. Plug in the source TF/SD card `/sdb1` and destination card `/sdc1`. You may use `lsblk` to check the mounting position
+2. There are two approaches to copy SD card
 
-<img src="./assets/cor_drone/image36.png" alt="36" style="width:45.0%" />
-<img src="./assets/cor_drone/image37.jpeg" alt="37" style="width:43.0%" />
+   - **Clone**: You can clone all blocks on the source card by using `dd` command:
 
-Then, fix the installed camera module in front of the onboard computer installation seat using M2.6x8 self-tapping screws, with the camera cable facing downwards. When installing, be careful not to pinch the cable. **A thin rubber sleeve or rubber pad can be placed on the screw between the camera module and the onboard computer installation seat for shock absorption.** The installation is shown in the following figure.
+     ```
+      sudo dd if=/dev/sdb1 of=/dev/sdc1 status=progress
 
-<img src="./assets/cor_drone/image38.jpeg" alt="38" style="width:70.0%" />
+     ```
+
+   - **Copy**: If the storage size of source card is different from that of destination card, you may copy the system file using `rsync` command:
+
+     ```
+     sudo rsync -axHAWX --numeric-ids --info=progress2 --exclude={"/dev/","/proc/","/sys/","/tmp/","/run/","/mnt/","/media/*","/lost+found"} /dev/sdb1/ /dev/sdc1
+     ```
+
+### 1.2.6 How to copy NVME SSD?
+
+To copy your Ubuntu system from `nvme0n1p1` to a new SSD, you generally need to follow these steps:
+
+1. **Backup Important Data**: Always create a backup of your important data to an external drive or a cloud storage solution before proceeding.
+
+2. **Boot from a Live USB/CD**: Before you can copy your system, boot your computer from a live Ubuntu USB or CD. This ensures that the partitions are not being used while we're copying them.
+
+3. **Identify Drives**: Once you're in the live environment, open a terminal and type:
+
+```bash
+sudo fdisk -l
+```
+
+This will list all the drives and their partitions. Identify the source (`nvme0n1p1` in your case) and the destination (your new SSD, e.g., `sda` or similar).
+
+4. **Use `dd` to Clone**: Once you've identified the correct drives, use the `dd` command to copy your system over:
+
+```bash
+sudo dd if=/dev/nvme0n1p1 of=/dev/sdX bs=64K conv=noerror,sync status=progress
+```
+
+Replace `/dev/sdX` with the appropriate identifier for your new SSD.
+
+5. **Resize the Filesystem** (if needed): If your new SSD is larger than the original `nvme0n1p1`, you'll have some unallocated space. To use this space, you need to resize the filesystem and possibly the partition.
+
+   - For ext4 filesystem:
+
+   ```bash
+   sudo resize2fs /dev/sdX1
+   ```
+
+6. **Update the GRUB bootloader**: The boot sector might need to be updated:
+
+```bash
+sudo grub-install /dev/sdX
+sudo update-grub
+```
+
+Replace `/dev/sdX` with the identifier for your new SSD.
+
+7. **Update `/etc/fstab`**: The UUID of your new SSD will be different. Mount your new SSD partition and update the UUID in `/etc/fstab`:
+
+```bash
+sudo blkid /dev/sdX1
+```
+
+This will give you the UUID. Now, mount the partition:
+
+```bash
+sudo mount /dev/sdX1 /mnt
+sudo nano /mnt/etc/fstab
+```
+
+Find the line with `/` (root filesystem) and replace the UUID with the one from the `blkid` command. Save and exit.
+
+8. **Reboot**: Once everything is done, reboot your computer. Ensure your BIOS/UEFI settings are set to boot from the new SSD.
+
+Note: The `dd` command is very powerful and also very dangerous. Make sure you've correctly identified source and destination to avoid data loss. If you're unsure about any steps, seek assistance from someone familiar with Linux disk operations.
+
+### 1.2.7 How to copy JetPack NVME SSD and boot from EMMC?
+
+After I copied SSD, I discovered that the system cannot boot from it.
+Therefore I choose to boot from EMMC selecting NVME as the boot device.
+
+1. launch from EMMC, and modify `/boot/extlinux/extlinux.conf`. You might need to back up before save.
+2. modify `root=/dev/mmcblk0p1` to `root=/dev/nvme0n1`
+3. modify the label of boot options: `LABEL primary` to `LABEL nvme`, `MENU LABEL primary kernel` to `MENU LABEL primary NVME`
+4. boot from EMMC
+
+### 1.2.8 Network Configuration
+
+If the onboard computer cannot connect to the Wi-Fi network, you may need to configure the network manually.
+You need to download the corresponding firmware from this [link](https://www.intel.com/content/www/us/en/support/articles/000005511/wireless.html)
+and copy the `.ucode` file to `/lib/firmware/` directory.
+Then, you may use the following command to configure the network:
+
+```bash
+tar xzf iwlwifi-cc-a0-*.ucode.tar.gz   # unzip the firmware
+```
+
+Next, copy the `.ucode` file to `/lib/firmware/` directory.
+
+```bash
+sudo cp iwlwifi-cc-a0-*.ucode /lib/firmware/
+```
 
 ## 1.3 Connection between Onboard Computer and Camera
 
-The onboard computer and Realsense camera are connected via a USB 3.0/3.1/3.2 cable. The Realsense end is a Type-C interface, and the HZHY H330 carrier board of the onboard computer has only one USB Type-C interface. Therefore, a USB hub is required to split the Type-C interface into multiple Type-A interfaces and connect the camera to one of them. Note that the USB hub can be attached to the small horizontal board behind the onboard computer.
-
-## 1.4 Onboard Computer Configuration
-
-Connect the keyboard, mouse, and monitor to the onboard computer, and power it using the onboard computer's built-in voltage regulator. Then, turn on the computer.
-For the HZHY 330 carrier board, you need to first migrate the system to the TF card. Refer to the HZHY NVIDIA series carrier board document "Installing the System to the Expansion Disk.pdf" for migration instructions.
-Install ROS and Realsense related drivers separately. Please refer to the official ROS website and Realsense website for installation instructions.
-(<https://dev.intelrealsense.com/docs/nvidia-jetson-tx2-installation>)
-
-<img src="./assets/cor_drone/image39.jpeg" alt="39" style="width:70.0%" />
-
-After installation is complete, open the Ubuntu system command line, and then enter `realsense-viewer` to open the sample software. Check that the connection in the upper left corner is USB 3.0 or above. You can open the depth map, RGB image in the software to view it.
-Using the ROS Wrapper, you can also retrieve the left and right infrared binocular images.
-Please take note that the RealSense depth camera requires a USB 3.0 connection to function properly. Using a lower bandwidth connection may result in insufficient data transmission capabilities.
+The onboard computer and Realsense camera are connected via a USB 3.0/3.1/3.2 cable.
+The RealSense has a Type-C interface, and the carrier board has 2 USB 3.0 interface, so you need to find a USB 3.0 Type-C cable.
+After connecting the cable, you can use the `lsusb` command to check if the camera is connected.
+Then, you may use the `realsense-viewer` command to check if the camera is working properly.
+Please take note that the RealSense depth camera requires a USB 3.0 connection to function properly.
+Using a lower bandwidth connection may result in insufficient data transmission capabilities.
 If the connection is USB 2.0/2.1, it may be due to the USB Hub or the USB cable used is not 3.0.
-If you encounter this error on the HZHY 330 carrier board, it may be due to an error in the USB 3.2 interface configuration. You need to open the `/etc/rc.local` file, add the two lines of commands circled in the figure below before `exit`, and then restart the onboard computer.
 
-## 1.5 Installation of Onboard Computer and Mounting to Aircraft
+Possible connection problems are:
+
+1. _SKU Invalid_ when plugin the realsense camera
+
+   Solution: According to Intel forum, directly update the firmware for D4 V3 board without D450 camera module.
+
+2. When launch the realsense node, continuously receiving error: `control_transfer returned error, index: 768`
+
+   Solution: `sudo apt purge ros-noetic-librealsense2`
+
+3. `lsusb` or `rs-capture` takes too long time to response
+
+   Solution: The only reason is the HSF100 cable is not well connected, chech the hardware connection and pins.
+
+4. `realsense-viewer` displays `USB 2.0 (High-speed)` in the upper left corner
+
+   Solution: The USB 3.0 cable is not connected properly, or the USB 3.0 cable is damaged.
+
+## 1.4 Mounting Onboard Computer on Drone
 
 During flight, the onboard computer needs to be powered by a separate power line from the battery or ESC soldering pad.
-The mounting bracket for the onboard computer has four installation holes. Align the bracket with the corresponding holes on
+The mounting bracket for the onboard computer has four installation holes.
+Align the bracket with the corresponding holes on
 the top of the aircraft, then use M2.6x8 self-tapping screws to mount it to the aircraft.
 
 <img src="./assets/cor_drone/image40.png" alt="40" style="width:70.0%" />
@@ -90,14 +214,14 @@ The drone after the installation is completed is as follows.
 
 <img src="./assets/cor_drone/image41.jpeg" alt="41" style="width:70.0%" />
 
-## 1.6 Connection Between Flight Controller and Onboard Computer
+## 1.5 Connection Between Flight Controller and Onboard Computer
 
 The onboard computer communicates with the flight controller by connecting a USB to TTL module to the USB port.
 Note that the maximum baud rate supported by the onboard computer's built-in serial port is not high enough (generally up to 115200), so the USB to TTL module is necessary. It is recommended to use a CP2102 serial port module, or other serial port modules such as PL2303 or CH340 can also be used. For the onboard computer used in this manual, it has only one USB Type-C interface, so a USB hub is needed to connect both the USB to TTL and the Realsense camera.
 
-## 1.7 Software Configuration
-
-On the flight controller side, we completed the communication settings with the onboard computer (i.e. MAV_2, Onboard) in step 1.11. On the onboard computer side, we need to fix the device port number of the USB to TTL and start MAVROS to achieve communication, as follows:
+Next, we will introduce the software configuration to make the onboard computer and the flight controller communicate properly.
+On the flight controller side, we have completed the communication settings with the onboard computer (i.e. MAV_2, Onboard).
+On the onboard computer side, we need to fix the device port number of the USB to TTL and start MAVROS to achieve communication, as follows:
 
 1. Bind the device port number of the USB to TTL, which can refer to the method in <https://unix.stackexchange.com/questions/66901/how-to-bind-usb-device-under-a-static-name> and name the USB to TTL device with a name you want, such as PX4.
 2. On the onboard computer, we need to install ROS and use the commands `sudo apt install ros-xxx-mavlink` and `sudo apt install ros-xxx-mavros` to install MAVROS. Use the command `roscd mavros` to open the `/opt/ros/xxx/share` folder where MAVROS is located. Then open the `Launch` folder where there is a launch file to start MAVROS, for example `px4.launch` for the PX4 firmware. We need to modify this file, but to avoid damaging the original file with incorrect modifications, we can copy and paste it to create a new file named `px4_companion.launch` using the command `sudo cp px4.launch px4_companion.launch`. Then, modify the `px4_companion.launch` file with the following changes:
@@ -114,29 +238,3 @@ On the flight controller side, we completed the communication settings with the 
        sudo apt-get remove modemmanager -y
        ```
        `After` logging out the system and logging in again, the permission manager of the onboard computer will be uninstalled to avoid the serial port The problem of no permission to open the serial port will be avoided.
-
----
-
-# Problem Lists
-
-1. _SKU Invalid_ when plugin the realsense camera
-
-   According to Intel forum, directly update the firmware for D4 V3 board without D450 camera module. Solved.
-
-2. When launch the realsense node, continuously receiving error: `control_transfer returned error, index: 768`
-
-   Solution: `sudo apt purge ros-noetic-librealsense2`
-
-3. `lsusb` or `rs-capture` takes too long time to response
-
-   The only reason is the HSF100 cable is not well connected, chech the hardware connection and pins.
-
-## Intel WiFi modules
-
-I don't know if this works. If direct plugin works then you can skip these steps.
-
-https://www.intel.com/content/www/us/en/support/articles/000005511/wireless.html
-
-1. Install the corresponding firmware (In our case we use AX210)
-2. Use `tar xzf` to unzip
-3. Copy the `.ucode` file under `/lib/firmware/`
