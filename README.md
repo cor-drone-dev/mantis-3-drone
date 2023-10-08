@@ -10,16 +10,20 @@ Based on the Chinese guidebook by Clarence Chen
 
 1. [Drone Body](./drone_body.md)
 
-2. [TODO][Flight Controllers](./flight_controller.md)
+2. [Autopilot](./autopilot.md)
 
-3. [TODO][Onboard Equipments](./onboard_equipments.md)
+3. [Onboard Equipments](./onboard_equipments.md)
 
-4. [TODO][Flight Tests](./flight_tests.md)
+4. [Flight Tests](./flight_tests.md)
 
-## ROS
+## Configurations
 
-[TODO] [MAVROS](./mavros.md)
+[MAVROS](./mavros.md)
 
 ### Multi-Robot Configurations
 
-[TODO][Multi-Drone via MAVROS](./mavros_multi_drones.md)
+[Multi-Drone via MAVROS](./mavros_multi_drones.md)
+
+## Tracking Control
+
+[px4ctrl](./px4_ctrl.md)

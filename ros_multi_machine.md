@@ -84,8 +84,9 @@ if they still have a big offset do:
 ```
 sudo /etc/init.d/chrony start
 sudo /etc/init.d/chrony stop
-check again. The offset should now get better.
 ```
+
+check again. The offset should now get better.
 
 hope that helps!
 
@@ -106,7 +107,7 @@ You may use `sudo apt-get install iperf` to install it.
 2. On the server machine, use following commands to start the process:
    `-s` denotes the server machine, `-p` specifies the port of communication.
    `-i` sets the time interval of test results printed on the screen.
-   `-t` gives the time duration of network test.
+   `-t` gives the time duration of network test0.
 
    ```
    iperf -s -p 14555 -i 1 -t 10

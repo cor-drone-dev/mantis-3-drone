@@ -1,16 +1,21 @@
-# Flight Controllers
+# Autopilot
 
-## 1. PX4 Flight Controller
+## 1. PX4 Autopilot
 
-### 1.1 Flight Controller Firmware Flashing
+### 1.1 PX4 Autopilot Firmware Flashing
 
-Disconnect the battery, insert the TF card into the flight controller, and then use a USB cable to flash the firmware. The flight controller firmware flashing tutorial can be found in the Holybro Kakuto H7 flashing px4 tutorial.docx.
+Disconnect the battery, insert the TF card into the flight controller, and then use a USB cable to flash the firmware.
 
-### 1.2 Flight Controller Parameter Configuration
+If you are using Holybro KakuteH7v2, you need to flash the PX4 firmware following this [link](https://docs.px4.io/main/en/advanced_config/bootloader_update_from_betaflight.html#dfu-util).
+First you need to install the firmware from the official [repo](), next compile it, then replace `build/<target>/<target>.bin` to the path of your compiled binary file.
+
+### 1.2 Autopilot Parameter Configuration
 
 Connect the flight controller to the computer with a USB cable and open the QGC software, and wait for the flight controller to connect. Refer to the video in <https://docs.px4.io/main/en/config/>, or the graphic tutorial on that webpage, to set up Airframe, calibrate Gyroscope, accelerometer, and Level Horizon, configure Radio channels, Flight Modes, and Battery step by step. Choose the **Generic X Type** quadcopter for Airframe, and the specific type can be DJI F330. Different types correspond to different preset parameters. Later, the parameters used by this aircraft will be reloaded.
 
 <img src="./assets/cor_drone/image12.png" alt="12" style="width:20.0%" />
+
+![](./assets/cor_drone/image12.png)
 
 \*\*Important: Next, you need to set the two parameters shown in the following figure in the _Parameters_ option (Parameters) of QGC to ensure the safe takeoff and flight of the drone\*\*
 
