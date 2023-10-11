@@ -1,8 +1,14 @@
 # User Manual
 
-## Onboard Computer
+## Password
 
-Password: cor-drones
+- Onboard Computer
+  Password: cor-drones
+- WiFi Router
+  - Name: COR-AMR
+    Password: cor-drones
+  - Name: AGoodWifi
+    Password: Agoodpassword123
 
 ## WiFi Router
 
