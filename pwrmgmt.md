@@ -1,4 +1,4 @@
-## Powewr
+## Power Management for Jetson
 
 Troubleshooting guide for Wifi and Realsense camera related power issues on the Mantis Drone
 
@@ -47,14 +47,14 @@ wlan0     IEEE 802.11  ESSID:"TP-Link_5F80_5G"
           Tx excessive retries:0  Invalid misc:36   Missed beacon:0
 ```
 
-Note that the common solution to set `wifi.powersave = 2` in `/etc/NetworkManager/default-wifi-powersave.conf` does not work. It would show that power mangement is off, but still the ping would be high! This is a common issue with jetson pcs (see [ff]()).
+Note that the common solution to set `wifi.powersave = 2` in `/etc/NetworkManager/default-wifi-powersave.conf` does not work. It would show that power mangement is off, but still the ping would be high! This is a common issue with jetson pcs (see [ff](https://github.com/robwaat/Tutorial/blob/master/Jetson%20Disable%20Wifi%20Power%20Management.md)).
 
 To set power management off manually:
 ```bash
 sudo iwconfig wlan0 power off
 ```
 
-But in case a realsense camera is also connected to the PC, even the manual solution doesn't work sometimes. 
+But in case a realsense camera is also connected to the PC, even the manual solution doesn't work sometimes. The hypothesis is that the camera reconfigures the interface for some reason. This also happens with USB ports apparently ([ref](https://forums.developer.nvidia.com/t/intel-realsense-d435i-showing-as-connected-to-usb-2-1/183851)).
 
 **Solution**
 When you see patterns like this, its usually the right sequence of events and settings that need to happen on the OBC in order for the solution to work.
@@ -93,7 +93,7 @@ User=root
 [Install]
 WantedBy=multi-user.target
 ```  
-The service pings the router (192.168.0.1) before starting up because the network-online.target requirement sometimes fails.
+The service pings the router (192.168.0.1) before starting up because the network-online.target requirement sometimes fails ([ref](https://askubuntu.com/questions/1363944/systemd-only-run-service-after-internet-is-up)).
 
 To test and enable the script:
 ```bash
